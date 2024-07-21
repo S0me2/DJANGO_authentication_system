@@ -10,9 +10,9 @@
     <form method="post">
         <!-- security reasons -->
         {% csrf_token %}
-        
+
         {{ form|crispy }}
-        <p>Don't have an account? Create one <a href="/sign-up">Here</a>!</p>
+        <p>Don't have an account? Create one <a href="/sign-up/">Here</a>!</p>
         <button type="submit" class="btn btn-success">Login</button>
     </form>
 {% endblock %}
