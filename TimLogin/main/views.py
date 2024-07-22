@@ -29,7 +29,7 @@ def home(request):
         quote = Quote.objects.filter(id=quote_id).first()
         if quote and quote.creator == request.user:
             quote.delete()
-            
+
     return render(request, 'main/home.html', {"quotes":quotes})
 
 def logout_view(request):
@@ -52,3 +52,17 @@ def create_quote(request):
     else:
         form = QuoteForm()
     return render(request, 'main/create_quote.html', {"form":form})
+
+
+
+@login_required(login_url="/login/")
+def my_quotes(request):
+    quotes = Quote.objects.filter(creator=request.user)
+
+    if request.method == "POST":
+        quote_id = request.POST.get("quote-id")
+        quote = Quote.objects.filter(id=quote_id).first()
+        if quote and quote.creator == request.user:
+            quote.delete()
+
+    return render(request, "main/my_quotes.html", {"quotes": quotes})
