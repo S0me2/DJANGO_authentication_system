@@ -29,11 +29,15 @@
                     {% if user.is_authenticated %}
                         <span class="navbar-text">Logged in as {{user.username}} | </span>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
+                            <a class="nav-link" href="/logout/">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link" href="/login/">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- here the name of link is used -->
+                            <a class="nav-link" href="{% url 'password_reset' %}">Reset the password?</a>
                         </li>
                     {% endif %}
                 </ul>

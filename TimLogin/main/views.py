@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from . forms import RegisterForm
 from django.contrib.auth import login, logout, authenticate
 
+
 def sign_up(request):
     # if it is a POST request, we will fill register form with input data(in the displayed form)
     if request.method == 'POST':
