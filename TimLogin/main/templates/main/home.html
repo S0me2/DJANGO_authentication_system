@@ -19,11 +19,20 @@
                     <p>{{ quote.text }}</p>
                 </div>
                 <div>
-                    {% if user == quote.creator %}
+                    {% if user == quote.creator or perms.main.delete_quote %}
                         <form method="POST">
                             {% csrf_token %}
                             <!-- every form submitted to the url -->
                             <button type="submit" class="btn btn-danger" value="{{ quote.id }}" name="quote-id">Delete</button>
+                        </form>
+                    {% endif %}
+
+                    <br>
+
+                    {% if user.is_staff %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-warning" value="{{ quote.creator.id }}" name="user-id">Ban User</button>
                         </form>
                     {% endif %}
                 </div>

@@ -1,9 +1,10 @@
+from django.contrib.auth.models import Group, User
 from django.shortcuts import redirect, render
 from . forms import RegisterForm
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from . forms import QuoteForm
-from .models import Quote
+from . models import Quote
 
 
 def sign_up(request):
@@ -12,6 +13,11 @@ def sign_up(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+            #automatically puts a user into this group
+            group = Group.objects.get(name='Default')
+            user.groups.add(group)
+
             login(request, user)
             return redirect('/home/')
     # if it is a GET request, we will create a empty form and render it
@@ -26,11 +32,30 @@ def home(request):
     quotes = Quote.objects.all()
     if request.method == "POST":
         quote_id = request.POST.get("quote-id")
-        quote = Quote.objects.filter(id=quote_id).first()
-        if quote and quote.creator == request.user:
-            quote.delete()
+        user_id = request.POST.get("user-id")
 
-    return render(request, 'main/home.html', {"quotes":quotes})
+        if quote_id:
+            quote = Quote.objects.filter(id=quote_id).first()
+            if quote and (quote.creator == request.user or request.user.has_perm("main.delete_quote")):
+                quote.delete()
+                return redirect('home')
+        elif user_id:
+            user = User.objects.filter(id=user_id).first()
+            if user and request.user.is_staff:
+                try:
+                    group = Group.objects.get(name='Default')
+                    group.user_set.remove(user)
+                except:
+                    pass
+                try:
+                    group = Group.objects.get(name='Moderator')
+                    group.user_set.remove(user)
+                except:
+                    pass
+
+    return render(request, 'main/home.html', {'quotes':quotes})
+
+
 
 def logout_view(request):
     logout(request)
@@ -40,6 +65,8 @@ def test_template(request):
     return render(request, 'registration/password_reset_do.html')
 
 @login_required(login_url="/login/")
+#permission filter
+@permission_required("main.add_quote", login_url="/login/", raise_exception=True)
 def create_quote(request):
     if request.method == "POST":
         form = QuoteForm(request.POST)
