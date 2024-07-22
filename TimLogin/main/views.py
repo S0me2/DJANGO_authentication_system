@@ -23,3 +23,6 @@ def home(request):
 def logout_view(request):
     logout(request)
     return redirect('/login/')
+
+def test_template(request):
+    return render(request, 'registration/password_reset.html')
