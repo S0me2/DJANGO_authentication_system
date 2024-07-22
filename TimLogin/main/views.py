@@ -25,4 +25,4 @@ def logout_view(request):
     return redirect('/login/')
 
 def test_template(request):
-    return render(request, 'registration/password_reset.html')
+    return render(request, 'registration/password_reset_do.html')
