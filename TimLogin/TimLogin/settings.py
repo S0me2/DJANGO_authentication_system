@@ -19,6 +19,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'vlad.vladislavov.2001@mail.ru'
 EMAIL_HOST_PASSWORD = 'VsAFsjZxzqYmY5fJ0sPR'
+DEFAULT_FROM_EMAIL = 'vlad.vladislavov.2001@mail.ru'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
